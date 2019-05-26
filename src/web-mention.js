@@ -30,9 +30,16 @@ class WebMention extends LitElement {
                 border-radius: 50%;
                 object-fit: cover;
                 margin-right: 0.5em;
+                background-color: #ededed;
             }
-            time {
-                font-style: italic;
+            header,
+            header > a {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            header > a {
+                margin-right: 1em;
             }
         `
     }
@@ -40,9 +47,9 @@ class WebMention extends LitElement {
     render() {
         return html`
             <div>
-                <p>
+                <header>
                     <a href=${this.url}>
-                        <img src=${this.avatar} width="50" height="50" alt="" />
+                        <img src=${this.avatar} width="40" height="40" alt="" />
                         <span>${this.author}</span>
                     </a>
                     <time datetime=${this.published}>
@@ -51,7 +58,7 @@ class WebMention extends LitElement {
                             'dd.MM.yyyy - HH:mm'
                         )}
                     </time>
-                </p>
+                </header>
                 <slot></slot>
             </div>
         `
