@@ -29,9 +29,9 @@ class WebMention extends LitElement {
 
     render() {
         return html`
-            <li>
+            <div>
                 A WebMention
-            </li>
+            </div>
         `
     }
 }

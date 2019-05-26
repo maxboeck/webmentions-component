@@ -1,4 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
+import { repeat } from 'lit-html/directives/repeat.js'
+import './web-mention.js'
 
 class WebMentions extends LitElement {
     constructor() {
@@ -84,7 +86,27 @@ class WebMentions extends LitElement {
         }
 
         return html`
-            <div>Webmentions for ${this.url}</div>
+            <div>
+                <h1>Webmentions for ${this.url}</h1>
+                <ol>
+                    ${repeat(
+                        this.webmentions,
+                        item => item['wm-id'],
+                        item => html`
+                            <li>
+                                <web-mention
+                                    url=${item.url}
+                                    author=${item.author.name}
+                                    avatar=${item.author.photo}
+                                    published=${item.published}
+                                >
+                                    ${item.content.value}
+                                </web-mention>
+                            </li>
+                        `
+                    )}
+                </ol>
+            </div>
         `
     }
 }
