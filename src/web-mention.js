@@ -1,4 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
+import format from 'date-fns/format'
+import parseISO from 'date-fns/parseISO'
 
 class WebMention extends LitElement {
     constructor() {
@@ -24,6 +26,13 @@ class WebMention extends LitElement {
             :host {
                 display: block;
             }
+            img {
+                border-radius: 50%;
+                object-fit: cover;
+            }
+            time {
+                font-size: 75%;
+            }
         `
     }
 
@@ -32,11 +41,14 @@ class WebMention extends LitElement {
             <div>
                 <p>
                     <a href=${this.url}>
-                        <img src=${this.avatar} alt="" />
+                        <img src=${this.avatar} width="50" height="50" alt="" />
                         <span>${this.author}</span>
                     </a>
                     <time datetime=${this.published}>
-                        ${this.published}
+                        ${format(
+                            parseISO(this.published),
+                            'dd.MM.yyyy - HH:mm'
+                        )}
                     </time>
                 </p>
                 <slot></slot>

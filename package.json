@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@webcomponents/webcomponentsjs": "latest",
+    "date-fns": "^2.0.0-alpha.27",
     "lit-element": "latest"
   }
 }

@@ -30,6 +30,12 @@ class WebMentions extends LitElement {
             :host {
                 display: block;
             }
+            ol {
+                list-style-type: none;
+            }
+            li {
+                margin-bottom: 1em;
+            }
         `
     }
 
@@ -86,27 +92,24 @@ class WebMentions extends LitElement {
         }
 
         return html`
-            <div>
-                <h1>Webmentions for ${this.url}</h1>
-                <ol>
-                    ${repeat(
-                        this.webmentions,
-                        item => item['wm-id'],
-                        item => html`
-                            <li>
-                                <web-mention
-                                    url=${item.url}
-                                    author=${item.author.name}
-                                    avatar=${item.author.photo}
-                                    published=${item.published}
-                                >
-                                    ${item.content.html}
-                                </web-mention>
-                            </li>
-                        `
-                    )}
-                </ol>
-            </div>
+            <ol>
+                ${repeat(
+                    this.webmentions,
+                    item => item['wm-id'],
+                    item => html`
+                        <li>
+                            <web-mention
+                                url=${item.url}
+                                author=${item.author.name}
+                                avatar=${item.author.photo}
+                                published=${item.published}
+                            >
+                                ${item.content.html}
+                            </web-mention>
+                        </li>
+                    `
+                )}
+            </ol>
         `
     }
 }
