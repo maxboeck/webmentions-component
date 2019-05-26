@@ -100,7 +100,7 @@ class WebMentions extends LitElement {
                                     avatar=${item.author.photo}
                                     published=${item.published}
                                 >
-                                    ${item.content.value}
+                                    ${item.content.html}
                                 </web-mention>
                             </li>
                         `
