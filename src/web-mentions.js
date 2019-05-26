@@ -31,6 +31,8 @@ class WebMentions extends LitElement {
                 display: block;
             }
             ol {
+                padding: 0;
+                margin: 0;
                 list-style-type: none;
             }
             li {
@@ -42,6 +44,13 @@ class WebMentions extends LitElement {
     connectedCallback() {
         super.connectedCallback()
         this.fetchWebmentions()
+    }
+
+    attributeChangedCallback(name, oldval, newval) {
+        if (['page', 'size', 'types'].includes(name)) {
+            this.fetchWebmentions()
+        }
+        super.attributeChangedCallback(name, oldval, newval)
     }
 
     buildQueryString(data) {
@@ -61,11 +70,21 @@ class WebMentions extends LitElement {
         return query.join('&')
     }
 
+    process(data) {
+        const checkRequiredFields = entry => {
+            const { author, published, content } = entry
+            return !!author && !!author.name && !!published && !!content
+        }
+
+        return data
+            .filter(entry => this.types.includes(entry['wm-property']))
+            .filter(checkRequiredFields)
+    }
+
     async fetchWebmentions() {
         const API_ORIGIN = 'https://webmention.io/api/mentions.jf2'
         const query = this.buildQueryString({
             target: this.url,
-            'wm-property': this.types,
             'per-page': this.size,
             page: this.page
         })
@@ -75,7 +94,7 @@ class WebMentions extends LitElement {
             const response = await fetch(`${API_ORIGIN}?${query}`)
             if (response.ok) {
                 const json = await response.json()
-                this.webmentions = json.children
+                this.webmentions = this.process(json.children)
                 this.isLoading = false
             }
         } catch (err) {
@@ -104,7 +123,7 @@ class WebMentions extends LitElement {
                                 avatar=${item.author.photo}
                                 published=${item.published}
                             >
-                                ${item.content.html}
+                                ${item.content.text}
                             </web-mention>
                         </li>
                     `
