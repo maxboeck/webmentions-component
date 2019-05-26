@@ -1,5 +1,5 @@
 {
-  "shell": "src/webmentions.js",
+  "shell": "src/web-mentions.js",
   "entrypoint": "index.html",
   "npm": true,
   "moduleResolution": "node",
