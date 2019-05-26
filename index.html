@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <title>web-mentions</title>
+  <meta name="description" content="a webmention webcomponent">
+  <meta name="theme-color" content="#ffffff">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="shortcut icon" href="/manifest/favicon.ico">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+</head>
+<body>
+  
+  <web-mentions>
+    <p id="js-enabled"></p>
+    <script type="text/javascript">
+      document.getElementById('js-enabled').innerHTML='Loading...';
+    </script>
+    <noscript>
+      Could not render webmentions. Check that JavaScript is enabled.
+    </noscript>
+  </web-mentions>
+
+</body>
