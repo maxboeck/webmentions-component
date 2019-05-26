@@ -57,17 +57,25 @@ class WebMention extends LitElement {
 
     render() {
         return html`
-            <div>
+            <div class="h-cite">
                 <header>
-                    <a href=${this.url}>
-                        <img src=${this.avatar} width="40" height="40" alt="" />
-                        <span>${this.author}</span>
+                    <a href=${this.url} class="u-url">
+                        <img
+                            src=${this.avatar}
+                            class="u-photo"
+                            width="40"
+                            height="40"
+                            alt=""
+                        />
+                        <span class="p-name">${this.author}</span>
                     </a>
-                    <time datetime=${this.published}>
+                    <time datetime=${this.published} class="dt-published">
                         ${this.formatDate(this.published)}
                     </time>
                 </header>
-                <slot></slot>
+                <div class="p-content">
+                    <slot></slot>
+                </div>
             </div>
         `
     }
