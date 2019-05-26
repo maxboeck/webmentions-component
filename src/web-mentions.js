@@ -1,5 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { repeat } from 'lit-html/directives/repeat.js'
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js'
+
 import './web-mention.js'
 
 class WebMentions extends LitElement {
@@ -17,9 +19,9 @@ class WebMentions extends LitElement {
     static get properties() {
         return {
             url: { type: String },
-            size: { type: Number },
-            page: { type: Number },
             types: { type: Array },
+            size: { type: Number, reflect: true },
+            page: { type: Number, reflect: true },
             webmentions: { type: Array, attribute: false },
             isLoading: { type: Boolean, attribute: false }
         }
@@ -36,7 +38,7 @@ class WebMentions extends LitElement {
                 list-style-type: none;
             }
             li {
-                margin-bottom: 1em;
+                margin-bottom: 2em;
             }
         `
     }
@@ -76,9 +78,23 @@ class WebMentions extends LitElement {
             return !!author && !!author.name && !!published && !!content
         }
 
+        //TODO: write a minimal html cleaner
+        const sanitizeHTML = html => html
+
+        const sanitizeContent = entry => {
+            const { text, html } = entry.content
+            if (html) {
+                entry.content.value = sanitizeHTML(html)
+            } else {
+                entry.content.value = `<p>${text}</p>`
+            }
+            return entry
+        }
+
         return data
             .filter(entry => this.types.includes(entry['wm-property']))
             .filter(checkRequiredFields)
+            .map(sanitizeContent)
     }
 
     async fetchWebmentions() {
@@ -123,7 +139,7 @@ class WebMentions extends LitElement {
                                 avatar=${item.author.photo}
                                 published=${item.published}
                             >
-                                ${item.content.text}
+                                ${unsafeHTML(item.content.value)}
                             </web-mention>
                         </li>
                     `
