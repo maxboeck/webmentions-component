@@ -1,6 +1,4 @@
 import { LitElement, html, css } from 'lit-element'
-import format from 'date-fns/format'
-import parseISO from 'date-fns/parseISO'
 
 class WebMention extends LitElement {
     constructor() {
@@ -44,6 +42,19 @@ class WebMention extends LitElement {
         `
     }
 
+    formatDate(iso) {
+        const date = new Date(iso)
+        const zeroPad = num => (num < 10 ? '0' + num : num)
+
+        const dd = zeroPad(date.getDate())
+        const MM = zeroPad(date.getMonth() + 1)
+        const yyyy = date.getFullYear()
+        const HH = zeroPad(date.getHours())
+        const mm = zeroPad(date.getMinutes())
+
+        return `${dd}.${MM}.${yyyy} - ${HH}:${mm}`
+    }
+
     render() {
         return html`
             <div>
@@ -53,10 +64,7 @@ class WebMention extends LitElement {
                         <span>${this.author}</span>
                     </a>
                     <time datetime=${this.published}>
-                        ${format(
-                            parseISO(this.published),
-                            'dd.MM.yyyy - HH:mm'
-                        )}
+                        ${this.formatDate(this.published)}
                     </time>
                 </header>
                 <slot></slot>

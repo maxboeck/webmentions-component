@@ -110,8 +110,10 @@ class WebMentions extends LitElement {
             const response = await fetch(`${API_ORIGIN}?${query}`)
             if (response.ok) {
                 const json = await response.json()
-                this.webmentions = this.process(json.children)
+                const webmentions = this.process(json.children)
+
                 this.isLoading = false
+                this.webmentions = webmentions
             }
         } catch (err) {
             console.error(err)
