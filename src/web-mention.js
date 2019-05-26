@@ -29,9 +29,10 @@ class WebMention extends LitElement {
             img {
                 border-radius: 50%;
                 object-fit: cover;
+                margin-right: 0.5em;
             }
             time {
-                font-size: 75%;
+                font-style: italic;
             }
         `
     }
