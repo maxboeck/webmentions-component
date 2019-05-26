@@ -20,7 +20,7 @@ class WebMentions extends LitElement {
         return {
             url: { type: String },
             types: { type: Array },
-            size: { type: Number, reflect: true },
+            size: { type: Number },
             page: { type: Number, reflect: true },
             webmentions: { type: Array, attribute: false },
             isLoading: { type: Boolean, attribute: false }
@@ -45,12 +45,12 @@ class WebMentions extends LitElement {
 
     connectedCallback() {
         super.connectedCallback()
-        this.fetchWebmentions()
+        this.init()
     }
 
     attributeChangedCallback(name, oldval, newval) {
-        if (['page', 'size', 'types'].includes(name)) {
-            this.fetchWebmentions()
+        if (name === 'page') {
+            this.loadNextPage()
         }
         super.attributeChangedCallback(name, oldval, newval)
     }
@@ -78,13 +78,10 @@ class WebMentions extends LitElement {
             return !!author && !!author.name && !!published && !!content
         }
 
-        //TODO: write a minimal html cleaner
-        const sanitizeHTML = html => html
-
         const sanitizeContent = entry => {
             const { text, html } = entry.content
             if (html) {
-                entry.content.value = sanitizeHTML(html)
+                entry.content.value = html
             } else {
                 entry.content.value = `<p>${text}</p>`
             }
@@ -97,12 +94,22 @@ class WebMentions extends LitElement {
             .map(sanitizeContent)
     }
 
-    async fetchWebmentions() {
+    async init() {
+        this.webmentions = await this.fetchData()
+    }
+
+    async loadNextPage() {
+        this.page += 1
+        const nextPage = await this.fetchData()
+        this.webmentions = this.webmentions.concat(nextPage)
+    }
+
+    async fetchData() {
         const API_ORIGIN = 'https://webmention.io/api/mentions.jf2'
         const query = this.buildQueryString({
             target: this.url,
-            'per-page': this.size,
-            page: this.page
+            page: this.page,
+            'per-page': this.size
         })
 
         try {
@@ -113,20 +120,19 @@ class WebMentions extends LitElement {
                 const webmentions = this.process(json.children)
 
                 this.isLoading = false
-                this.webmentions = webmentions
+                return webmentions
             }
         } catch (err) {
             console.error(err)
             this.isLoading = false
+            return false
         }
     }
 
     render() {
-        if (this.isLoading) {
-            return html`
-                <p>Loading...</p>
-            `
-        }
+        const loading = html`
+            <p>Loading Webmentions...</p>
+        `
 
         return html`
             <ol>
@@ -147,6 +153,7 @@ class WebMentions extends LitElement {
                     `
                 )}
             </ol>
+            ${this.isLoading ? loading : null}
         `
     }
 }
