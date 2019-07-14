@@ -10,7 +10,7 @@ class WebMentions extends LitElement {
 
         this.webmentions = []
         this.url = window.location.href
-        this.types = ['in-reply-to', 'like-of', 'repost-of', 'mention-of']
+        this.types = ['in-reply-to', 'mention-of']
         this.size = 10
         this.page = 0
         this.isLastPage = false
