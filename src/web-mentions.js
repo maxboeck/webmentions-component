@@ -11,8 +11,9 @@ class WebMentions extends LitElement {
         this.webmentions = []
         this.url = window.location.href
         this.types = ['in-reply-to', 'like-of', 'repost-of', 'mention-of']
-        this.size = 20
+        this.size = 10
         this.page = 0
+        this.isLastPage = false
         this.isLoading = false
     }
 
@@ -22,6 +23,7 @@ class WebMentions extends LitElement {
             types: { type: Array },
             size: { type: Number },
             page: { type: Number, reflect: true },
+            isLastPage: { type: Boolean, attribute: false },
             webmentions: { type: Array, attribute: false },
             isLoading: { type: Boolean, attribute: false }
         }
@@ -49,8 +51,8 @@ class WebMentions extends LitElement {
     }
 
     attributeChangedCallback(name, oldval, newval) {
-        if (name === 'page') {
-            this.loadNextPage()
+        if (oldval !== null) {
+            console.log('attribute change:', name, oldval, newval)
         }
         super.attributeChangedCallback(name, oldval, newval)
     }
@@ -119,6 +121,10 @@ class WebMentions extends LitElement {
                 const json = await response.json()
                 const webmentions = this.process(json.children)
 
+                if (json.children.length < this.size) {
+                    this.isLastPage = true
+                }
+
                 this.isLoading = false
                 return webmentions
             }
@@ -130,9 +136,23 @@ class WebMentions extends LitElement {
     }
 
     render() {
-        const loading = html`
+        if (!this.isLoading && !this.webmentions.length) {
+            return html`
+                <p>No Webmentions yet.</p>
+            `
+        }
+
+        const loadingMsg = html`
             <p>Loading Webmentions...</p>
         `
+
+        const nextPageBtn = !this.isLastPage
+            ? html`
+                  <button type="button" @click=${this.loadNextPage}>
+                      Load Next Page
+                  </button>
+              `
+            : null
 
         return html`
             <ol>
@@ -153,7 +173,7 @@ class WebMentions extends LitElement {
                     `
                 )}
             </ol>
-            ${this.isLoading ? loading : null}
+            ${this.isLoading ? loadingMsg : nextPageBtn}
         `
     }
 }
