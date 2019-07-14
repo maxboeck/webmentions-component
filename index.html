@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <title>web-mentions</title>
-  <meta name="description" content="a webmention webcomponent">
+  <meta name="description" content="A Webmention Webcomponent">
   <meta name="theme-color" content="#ffffff">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +12,37 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta charset="UTF-8">
 
+  <style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    padding: 0;
+    font-family: sans-serif;
+    font-size: 100%;
+    line-height: 1.5;
+  }
+
+  .demo {
+    width: 90%;
+    max-width: 35rem;
+    margin: 4rem auto;
+  }
+  </style>
+
   <script type="module" src="./src/web-mentions.js"></script>
 </head>
-<body>
-  
-  <web-mentions url="https://mxb.dev/blog/using-webmentions-on-static-sites/">
-    <noscript>
-      Could not render webmentions. Check that JavaScript is enabled.
-    </noscript>
-  </web-mentions>
+<body>  
+  <div class="demo">
 
+    <web-mentions url="https://mxb.dev/blog/the-css-mindset/">
+      <noscript>
+        Could not render webmentions. Check that JavaScript is enabled.
+      </noscript>
+    </web-mentions>
+
+  </div>
 </body>

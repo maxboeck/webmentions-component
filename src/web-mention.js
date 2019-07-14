@@ -36,8 +36,14 @@ class WebMention extends LitElement {
                 flex-wrap: wrap;
                 align-items: center;
             }
+            header {
+                margin-bottom: 0.5em;
+            }
             header > a {
                 margin-right: 1em;
+            }
+            time {
+                font-size: 0.875em;
             }
         `
     }
