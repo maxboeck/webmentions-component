@@ -1,5 +1,5 @@
 {
-  "name": "webmention-component",
+  "name": "webmentions-component",
   "version": "1.0.0",
   "description": "a webmention.io webcomponent",
   "repository": "https://github.com/maxboeck/web-mentions",
