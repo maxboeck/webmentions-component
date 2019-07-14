@@ -50,13 +50,6 @@ class WebMentions extends LitElement {
         this.init()
     }
 
-    attributeChangedCallback(name, oldval, newval) {
-        if (oldval !== null) {
-            console.log('attribute change:', name, oldval, newval)
-        }
-        super.attributeChangedCallback(name, oldval, newval)
-    }
-
     buildQueryString(data) {
         const query = []
         for (let param in data) {
