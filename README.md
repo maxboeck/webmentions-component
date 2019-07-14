@@ -5,6 +5,13 @@ A webcomponent to display webmentions using the webmention.io API.
 ## Prerequisites
 
 To start using webmentions on your site, you must first declare an endpoint for them.
+See the [webmention.io](https://webmention.io/#use-it) document for that. Once you're signed up, add this link tag to you site's `<head>`. 
+
+```html
+<link rel="webmention" href="https://webmention.io/example.com/webmention" />
+```
+
+Additionally, you may want to set up [Bridgy](https://brid.gy) to forward your social media reactions to your webmentions.
 
 ## Usage
 
