@@ -4,6 +4,7 @@
   "description": "a webmention.io webcomponent",
   "repository": "https://github.com/maxboeck/web-mentions",
   "main": "web-mentions.js",
+  "module": "web-mentions.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
