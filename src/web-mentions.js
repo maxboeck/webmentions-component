@@ -190,7 +190,7 @@ class WebMentions extends LitElement {
       return html`
         <ul class="webmentions-counter">
           <li title="Likes">❤️ ${likeCount}</li>
-          <li title="Reposts">♻️ ${repostCount}</li>
+          <li title="Reposts">🔁 ${repostCount}</li>
           <li title="Mentions">💬 ${mentionCount}</li>
         </ul>
       `
