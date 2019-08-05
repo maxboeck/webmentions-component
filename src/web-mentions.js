@@ -34,13 +34,28 @@ class WebMentions extends LitElement {
       :host {
         display: block;
       }
-      ol {
+      .webmentions-list {
         padding: 0;
         margin: 0;
         list-style-type: none;
       }
-      li {
+      .webmentions-item {
         margin-bottom: 2em;
+      }
+      .webmentions-footer {
+        text-align: center;
+      }
+      .webmentions-btn {
+        display: inline-block;
+        height: 2.5rem;
+        padding: 0 1rem;
+        border: 0;
+        font-size: 1rem;
+        white-space: nowrap;
+        line-height: 2.5rem;
+        color: #fff;
+        border-radius: var(--wm-border-radius, 4px);
+        background-color: var(--wm-primary-color, #004283);
       }
     `
   }
@@ -141,19 +156,23 @@ class WebMentions extends LitElement {
 
     const nextPageBtn = !this.isLastPage
       ? html`
-          <button type="button" @click=${this.loadNextPage}>
+          <button
+            type="button"
+            class="webmentions-btn"
+            @click=${this.loadNextPage}
+          >
             Load Next Page
           </button>
         `
       : null
 
     return html`
-      <ol>
+      <ol class="webmentions-list">
         ${repeat(
           this.webmentions,
           item => item['wm-id'],
           item => html`
-            <li>
+            <li class="webmentions-item">
               <web-mention
                 url=${item.url}
                 author=${item.author.name}
@@ -166,7 +185,9 @@ class WebMentions extends LitElement {
           `
         )}
       </ol>
-      ${this.isLoading ? loadingMsg : nextPageBtn}
+      <div class="webmentions-footer">
+        ${this.isLoading ? loadingMsg : nextPageBtn}
+      </div>
     `
   }
 }

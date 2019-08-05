@@ -24,25 +24,35 @@ class WebMention extends LitElement {
       :host {
         display: block;
       }
-      img {
+      a,
+      ::slotted(a) {
+        color: var(--wm-primary-color);
+      }
+      a:hover,
+      a:focus,
+      ::slotted(a:hover),
+      ::slotted(a:focus) {
+        text-decoration: none;
+      }
+      .webmention-avatar {
         border-radius: 50%;
         object-fit: cover;
         margin-right: 0.5em;
         background-color: #ededed;
       }
-      .meta,
-      .meta > a {
+      .webmention-meta,
+      .webmention-link {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
       }
-      .meta {
+      .webmention-meta {
         margin-bottom: 0.5em;
       }
-      .meta > a {
+      .webmention-link {
         margin-right: 1em;
       }
-      time {
+      .webmention-time {
         font-size: 0.875em;
       }
     `
@@ -52,9 +62,9 @@ class WebMention extends LitElement {
     const date = new Date(iso)
     const zeroPad = num => (num < 10 ? '0' + num : num)
 
+    const yyyy = date.getFullYear()
     const dd = zeroPad(date.getDate())
     const MM = zeroPad(date.getMonth() + 1)
-    const yyyy = date.getFullYear()
     const HH = zeroPad(date.getHours())
     const mm = zeroPad(date.getMinutes())
 
@@ -63,23 +73,23 @@ class WebMention extends LitElement {
 
   render() {
     return html`
-      <div class="h-cite">
-        <div class="meta">
-          <a href=${this.url} class="u-url">
+      <div class="webmention h-cite">
+        <div class="webmention-meta">
+          <a href=${this.url} class="webmention-link u-url">
             <img
               src=${this.avatar}
-              class="u-photo"
+              class="webmention-avatar u-photo"
               width="40"
               height="40"
               alt=""
             />
             <span class="p-name">${this.author}</span>
           </a>
-          <time datetime=${this.published} class="dt-published">
+          <time datetime=${this.published} class="webmention-time dt-published">
             ${this.formatDate(this.published)}
           </time>
         </div>
-        <div class="p-content">
+        <div class="webmention-content p-content">
           <slot></slot>
         </div>
       </div>
