@@ -9,10 +9,13 @@ class WebMentions extends LitElement {
     super()
 
     this.webmentions = []
+    this.counter = {}
+
     this.url = window.location.href
     this.types = ['in-reply-to', 'mention-of']
     this.size = 10
     this.page = 0
+    this.withCounter = true
     this.isLastPage = false
     this.isLoading = false
   }
@@ -23,9 +26,11 @@ class WebMentions extends LitElement {
       types: { type: Array },
       size: { type: Number },
       page: { type: Number, reflect: true },
+      withCounter: { type: Boolean },
       isLastPage: { type: Boolean, attribute: false },
+      isLoading: { type: Boolean, attribute: false },
       webmentions: { type: Array, attribute: false },
-      isLoading: { type: Boolean, attribute: false }
+      counter: { type: Object, attribute: false }
     }
   }
 
@@ -33,6 +38,16 @@ class WebMentions extends LitElement {
     return css`
       :host {
         display: block;
+      }
+      .webmentions-counter {
+        display: flex;
+        flex-wrap: wrap;
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 2rem;
+      }
+      .webmentions-counter li {
+        margin-right: 1em;
       }
       .webmentions-list {
         padding: 0;
@@ -105,16 +120,37 @@ class WebMentions extends LitElement {
   }
 
   async init() {
-    this.webmentions = await this.fetchData()
+    if (this.withCounter) {
+      this.counter = await this.fetchCounter()
+    }
+    this.webmentions = await this.fetchMentions()
   }
 
   async loadNextPage() {
     this.page += 1
-    const nextPage = await this.fetchData()
+    const nextPage = await this.fetchMentions()
     this.webmentions = this.webmentions.concat(nextPage)
   }
 
-  async fetchData() {
+  async fetchCounter() {
+    const API_ORIGIN = 'https://webmention.io/api/count'
+    const query = this.buildQueryString({
+      target: this.url
+    })
+
+    try {
+      const response = await fetch(`${API_ORIGIN}?${query}`)
+      if (response.ok) {
+        const json = await response.json()
+        return json
+      }
+    } catch (err) {
+      console.error(err)
+      return false
+    }
+  }
+
+  async fetchMentions() {
     const API_ORIGIN = 'https://webmention.io/api/mentions.jf2'
     const query = this.buildQueryString({
       target: this.url,
@@ -143,6 +179,24 @@ class WebMentions extends LitElement {
     }
   }
 
+  renderCounter() {
+    if (this.withCounter && this.counter.type) {
+      const {
+        like: likeCount,
+        repost: repostCount,
+        mention: mentionCount
+      } = this.counter.type
+
+      return html`
+        <ul class="webmentions-counter">
+          <li title="Likes">❤️ ${likeCount}</li>
+          <li title="Reposts">♻️ ${repostCount}</li>
+          <li title="Mentions">💬 ${mentionCount}</li>
+        </ul>
+      `
+    }
+  }
+
   render() {
     if (!this.isLoading && !this.webmentions.length) {
       return html`
@@ -167,6 +221,7 @@ class WebMentions extends LitElement {
       : null
 
     return html`
+      ${this.renderCounter()}
       <ol class="webmentions-list">
         ${repeat(
           this.webmentions,
